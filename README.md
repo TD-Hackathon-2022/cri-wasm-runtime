@@ -1,1 +1,1 @@
-# cri-wasm-runtime
+# cri-template
