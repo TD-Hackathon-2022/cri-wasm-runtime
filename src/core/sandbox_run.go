@@ -16,12 +16,19 @@ func (ds *templateService) RunPodSandbox(
 	defer logrus.Infof("end run sandbox, sandboxId: %s", r.GetConfig().GetMetadata().GetUid())
 	resp := &v1.RunPodSandboxResponse{PodSandboxId: r.GetConfig().GetMetadata().GetUid()}
 	status := &v1.PodSandboxStatus{
-		Id:             resp.GetPodSandboxId(),
-		Metadata:       r.GetConfig().Metadata,
-		State:          v1.PodSandboxState_SANDBOX_READY,
-		CreatedAt:      ds.clock.Now().UnixNano(),
-		Network:        nil,
-		Linux:          nil,
+		Id:        resp.GetPodSandboxId(),
+		Metadata:  r.GetConfig().Metadata,
+		State:     v1.PodSandboxState_SANDBOX_READY,
+		CreatedAt: ds.clock.Now().UnixNano(),
+		Network: &v1.PodSandboxNetworkStatus{
+			Ip:            "172.31.19.45",
+			AdditionalIps: make([]*v1.PodIP, 0),
+		},
+		Linux: &v1.LinuxPodSandboxStatus{
+			Namespaces: &v1.Namespace{
+				Options: r.GetConfig().GetLinux().GetSecurityContext().GetNamespaceOptions(),
+			},
+		},
 		Labels:         r.GetConfig().Labels,
 		Annotations:    r.GetConfig().Annotations,
 		RuntimeHandler: r.RuntimeHandler,
