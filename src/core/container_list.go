@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"github.com/sirupsen/logrus"
 	v1 "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 )
 
@@ -40,5 +41,6 @@ func (ds *templateService) ListContainers(
 			items = append(items, item)
 		}
 	}
+	logrus.Infof("end list container, itemSize: %d", len(items))
 	return &v1.ListContainersResponse{Containers: items}, nil
 }
