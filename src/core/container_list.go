@@ -2,7 +2,6 @@ package core
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
 	v1 "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 )
 
@@ -13,8 +12,8 @@ func (ds *templateService) ListContainers(
 ) (*v1.ListContainersResponse, error) {
 	// list all with filter
 	// todo filter
-	logrus.Infof("list container, container count : %d", len(ds.containerCache))
-	defer logrus.Infof("end list container")
+	//logrus.Infof("list container, container count : %d", len(ds.containerCache))
+	//defer logrus.Infof("end list container")
 	items := make([]*v1.Container, 0, len(ds.containerCache))
 	for containerId, containerCache := range ds.containerCache {
 		item := &v1.Container{

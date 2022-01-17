@@ -2,7 +2,6 @@ package core
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
 	v1 "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 )
 
@@ -12,7 +11,7 @@ func (ds *templateService) ListPodSandbox(
 	r *v1.ListPodSandboxRequest,
 ) (*v1.ListPodSandboxResponse, error) {
 	// todo filter
-	logrus.Infof("list sandbox, sandbox count: %d", len(ds.sandboxCache))
+	//logrus.Infof("list sandbox, sandbox count: %d", len(ds.sandboxCache))
 
 	items := make([]*v1.PodSandbox, 0, len(ds.sandboxCache))
 	for id, cache := range ds.sandboxCache {
@@ -27,7 +26,7 @@ func (ds *templateService) ListPodSandbox(
 		}
 		items = append(items, item)
 	}
-	logrus.Infof("end list2 sandbox")
-	logrus.Infof("end list sandbox, itemSize: %d", len(items))
+	//logrus.Infof("end list2 sandbox")
+	//logrus.Infof("end list sandbox, itemSize: %d", len(items))
 	return &v1.ListPodSandboxResponse{Items: items}, nil
 }
