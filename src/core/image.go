@@ -17,7 +17,6 @@ func (ds *templateService) ListImages(
 ) (*runtimeapi.ListImagesResponse, error) {
 	// todo something here
 	//logrus.Infof("list image, image count : %d", len(ds.imageCache))
-
 	items := make([]*runtimeapi.Image, 0, len(ds.imageCache))
 	for id, cache := range ds.imageCache {
 		item := &runtimeapi.Image{

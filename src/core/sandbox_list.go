@@ -12,19 +12,23 @@ func (ds *templateService) ListPodSandbox(
 ) (*v1.ListPodSandboxResponse, error) {
 	// todo filter
 	//logrus.Infof("list sandbox, sandbox count: %d", len(ds.sandboxCache))
-
+	filterSandboxId := r.GetFilter().GetId()
+	filterSandboxState := r.GetFilter().GetState()
 	items := make([]*v1.PodSandbox, 0, len(ds.sandboxCache))
 	for id, cache := range ds.sandboxCache {
-		item := &v1.PodSandbox{
-			Id:             id,
-			Metadata:       cache.config.Metadata,
-			State:          cache.status.State,
-			CreatedAt:      cache.status.CreatedAt,
-			Labels:         cache.config.Labels,
-			Annotations:    cache.config.Annotations,
-			RuntimeHandler: cache.status.GetRuntimeHandler(),
+		filterSuccess := filterSandboxId == id && filterSandboxState.GetState() == cache.status.GetState()
+		if filterSuccess {
+			item := &v1.PodSandbox{
+				Id:             id,
+				Metadata:       cache.config.Metadata,
+				State:          cache.status.State,
+				CreatedAt:      cache.status.CreatedAt,
+				Labels:         cache.config.Labels,
+				Annotations:    cache.config.Annotations,
+				RuntimeHandler: cache.status.GetRuntimeHandler(),
+			}
+			items = append(items, item)
 		}
-		items = append(items, item)
 	}
 	//logrus.Infof("end list2 sandbox")
 	//logrus.Infof("end list sandbox, itemSize: %d", len(items))
