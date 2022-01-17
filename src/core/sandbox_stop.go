@@ -21,5 +21,5 @@ func (ds *templateService) StopPodSandbox(
 	}
 	// todo status after stop
 	sandboxCache.status.State = v1.PodSandboxState_SANDBOX_NOTREADY
-	return nil, nil
+	return &v1.StopPodSandboxResponse{}, nil
 }

@@ -21,5 +21,6 @@ func (ds *templateService) StopContainer(
 	containerCache.status.State = v1.ContainerState_CONTAINER_EXITED
 	containerCache.status.FinishedAt = ds.clock.Now().UnixNano()
 	containerCache.status.ExitCode = 0
+	containerCache.status.Reason = "Completed"
 	return &v1.StopContainerResponse{}, nil
 }
