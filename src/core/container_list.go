@@ -27,6 +27,9 @@ func (ds *templateService) ListContainers(
 		}
 		filterSuccess = filterContainerState.GetState() == containerCache.status.GetState()
 		if filterSuccess {
+			if ds.imageCache[containerCache.config.GetImage().GetImage()].name == "nginx" {
+				logrus.Infof("nginx c status: %d", containerCache.status.GetState())
+			}
 			item := &v1.Container{
 				Id:           containerId,
 				PodSandboxId: containerCache.sandboxId,
@@ -41,6 +44,6 @@ func (ds *templateService) ListContainers(
 			items = append(items, item)
 		}
 	}
-	logrus.Infof("list container, sbid:{}, cid:{}, cs:{} : %s, %s ,%d, end list container, itemSize: %d", filterSandboxId, filterContainerId, filterContainerState.GetState(), len(items))
+	//logrus.Infof("list container, sbid:{}, cid:{}, cs:{} : %s, %s ,%d, end list container, itemSize: %d", filterSandboxId, filterContainerId, filterContainerState.GetState(), len(items))
 	return &v1.ListContainersResponse{Containers: items}, nil
 }
