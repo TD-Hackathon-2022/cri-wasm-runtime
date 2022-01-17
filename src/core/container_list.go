@@ -41,6 +41,6 @@ func (ds *templateService) ListContainers(
 			items = append(items, item)
 		}
 	}
-	logrus.Infof("end list container, itemSize: %d", len(items))
+	logrus.Infof("list container, sbid:{}, cid:{}, cs:{} : %s, %s ,%d, end list container, itemSize: %d", filterSandboxId, filterContainerId, filterContainerState.GetState(), len(items))
 	return &v1.ListContainersResponse{Containers: items}, nil
 }
