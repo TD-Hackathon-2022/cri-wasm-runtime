@@ -12,8 +12,8 @@ func (ds *templateService) RunPodSandbox(
 	ctx context.Context,
 	r *v1.RunPodSandboxRequest,
 ) (*v1.RunPodSandboxResponse, error) {
-	logrus.Infof("run sandbox, sandboxId: %s", r.GetConfig().GetMetadata().GetUid())
-	logrus.Infof("sandbox count: %d", len(ds.sandboxCache))
+	logrus.Infof("run sandbox, sandboxId: %s, sandbox count: %d", r.GetConfig().GetMetadata().GetUid(), len(ds.sandboxCache))
+	defer logrus.Infof("end run sandbox, sandboxId: %s", r.GetConfig().GetMetadata().GetUid())
 	resp := &v1.RunPodSandboxResponse{PodSandboxId: r.GetConfig().GetMetadata().GetUid()}
 	status := &v1.PodSandboxStatus{
 		Id:             resp.GetPodSandboxId(),

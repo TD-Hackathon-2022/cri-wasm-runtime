@@ -13,8 +13,8 @@ func (ds *templateService) ContainerStatus(
 	req *v1.ContainerStatusRequest,
 ) (*v1.ContainerStatusResponse, error) {
 	//something here
-	logrus.Infof("status container: %s", req.GetContainerId())
-	logrus.Infof("container count : %d", len(ds.containerCache))
+	logrus.Infof("status container: %s, container count : %d", req.GetContainerId(), len(ds.containerCache))
+	defer logrus.Infof("end status container, container: %s", req.GetContainerId())
 	containerCache := ds.containerCache[req.GetContainerId()]
 	if containerCache == nil {
 		return nil, fmt.Errorf("cannot find container")

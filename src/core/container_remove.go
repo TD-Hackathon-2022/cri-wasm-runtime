@@ -12,8 +12,8 @@ func (ds *templateService) RemoveContainer(
 	r *v1.RemoveContainerRequest,
 ) (*v1.RemoveContainerResponse, error) {
 	// something here
-	logrus.Infof("remove container: %s", r.GetContainerId())
-	logrus.Infof("container count : %d", len(ds.containerCache))
+	logrus.Infof("remove container: %s, container count : %d", r.GetContainerId(), len(ds.containerCache))
+	defer logrus.Infof("end remove container, container: %s", r.GetContainerId())
 	delete(ds.containerCache, r.GetContainerId())
 	return &v1.RemoveContainerResponse{}, nil
 }

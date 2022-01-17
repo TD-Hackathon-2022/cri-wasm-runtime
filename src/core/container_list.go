@@ -13,9 +13,9 @@ func (ds *templateService) ListContainers(
 ) (*v1.ListContainersResponse, error) {
 	// list all with filter
 	// todo filter
-	logrus.Infof("list container")
-	logrus.Infof("container count : %d", len(ds.containerCache))
-	items := make([]*v1.Container, len(ds.containerCache))
+	logrus.Infof("list container, container count : %d", len(ds.containerCache))
+	defer logrus.Infof("end list container")
+	items := make([]*v1.Container, 0, len(ds.containerCache))
 	for containerId, containerCache := range ds.containerCache {
 		item := &v1.Container{
 			Id:           containerId,

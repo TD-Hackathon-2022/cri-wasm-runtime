@@ -3,10 +3,9 @@ package core
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"github.com/diannaowa/cri-template/streaming"
 	"github.com/diannaowa/cri-template/utils"
-	"google.golang.org/grpc/codes"
+	"github.com/sirupsen/logrus"
 	v1 "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 	"time"
 )
@@ -19,31 +18,15 @@ func (ds *templateService) ExecSync(
 	ctx context.Context,
 	req *v1.ExecSyncRequest,
 ) (*v1.ExecSyncResponse, error) {
-
+	logrus.Infof("exec container, container: %s, container count : %d", req.GetContainerId(), len(ds.containerCache))
 	timeout := time.Duration(utils.Min(req.Timeout, syncExecMaxTimeout)) * time.Second
+	logrus.Info(timeout)
+
 	var stdoutBuffer, stderrBuffer bytes.Buffer
-	err := ds.streamingRuntime.ExecWithContext(ctx, req.ContainerId, req.Cmd,
-		nil, // in
-		utils.WriteCloserWrapper(utils.LimitWriter(&stdoutBuffer, maxMsgSize)),
-		utils.WriteCloserWrapper(utils.LimitWriter(&stderrBuffer, maxMsgSize)),
-		false, // tty
-		nil,   // resize
-		timeout)
+	var exitCode int32 = 0
+	stdoutBuffer.WriteString("hello world")
+	stderrBuffer.WriteString("")
 
-	// kubelet's backend runtime expects a grpc error with status code DeadlineExceeded on time out.
-	if err == context.DeadlineExceeded {
-		return nil, fmt.Errorf("deadline exceeded (%q): %v", codes.DeadlineExceeded, err.Error())
-	}
-
-	var exitCode int32
-	if err != nil {
-		exitError, ok := err.(utils.ExitError)
-		if !ok {
-			return nil, err
-		}
-
-		exitCode = int32(exitError.ExitStatus())
-	}
 	return &v1.ExecSyncResponse{
 		Stdout:   stdoutBuffer.Bytes(),
 		Stderr:   stderrBuffer.Bytes(),

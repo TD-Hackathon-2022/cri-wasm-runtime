@@ -14,8 +14,8 @@ func (ds *templateService) StopPodSandbox(
 	ctx context.Context,
 	r *v1.StopPodSandboxRequest,
 ) (*v1.StopPodSandboxResponse, error) {
-	logrus.Infof("stop sandbox, sandboxId: %s", r.GetPodSandboxId())
-	logrus.Infof("sandbox count: %d", len(ds.sandboxCache))
+	logrus.Infof("stop sandbox, sandboxId: %s, sandbox count: %d", r.GetPodSandboxId(), len(ds.sandboxCache))
+	defer logrus.Infof("end stop sandbox, sandboxId: %s", r.GetPodSandboxId())
 	sandboxCache := ds.sandboxCache[r.GetPodSandboxId()]
 	if sandboxCache == nil {
 		return nil, nil

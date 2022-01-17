@@ -15,8 +15,9 @@ func (ds *templateService) CreateContainer(
 	r *v1.CreateContainerRequest,
 ) (*v1.CreateContainerResponse, error) {
 	//something here
-	logrus.Infof("create container")
-	logrus.Infof("container count : %d", len(ds.containerCache))
+	logrus.Infof("create container, container count : %d", len(ds.containerCache))
+	logrus.Infof("create container, image : %s", r.GetConfig().GetImage().GetImage())
+	defer logrus.Infof("end create container")
 	containerId := uuid.New()
 	sandboxId := r.GetPodSandboxId()
 	containerConfig := r.GetConfig()

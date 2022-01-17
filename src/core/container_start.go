@@ -12,8 +12,8 @@ func (ds *templateService) StartContainer(
 	_ context.Context,
 	r *v1.StartContainerRequest,
 ) (*v1.StartContainerResponse, error) {
-	logrus.Infof("start container: %s", r.GetContainerId())
-	logrus.Infof("container count : %d", len(ds.containerCache))
+	logrus.Infof("start container: %s, container count : %d", r.GetContainerId(), len(ds.containerCache))
+	defer logrus.Infof("end start container, container: %s", r.GetContainerId())
 	containerCache := ds.containerCache[r.GetContainerId()]
 	if containerCache == nil {
 		return nil, fmt.Errorf("cannot find container")
