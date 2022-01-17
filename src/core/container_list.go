@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"github.com/sirupsen/logrus"
 	v1 "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 )
 
@@ -16,6 +17,7 @@ func (ds *templateService) ListContainers(
 	filterContainerId := r.GetFilter().GetId()
 	filterContainerState := r.GetFilter().GetState()
 	items := make([]*v1.Container, 0, len(ds.containerCache))
+	logrus.Infof("list container, sbid:{}, cid:{}, cs:{} : %s, %s ,%d", filterSandboxId, filterContainerId, filterContainerState.GetState())
 	for containerId, containerCache := range ds.containerCache {
 		filterSuccess := filterSandboxId == containerCache.sandboxId && filterContainerId == containerId && filterContainerState.GetState() == containerCache.status.GetState()
 		if filterSuccess {

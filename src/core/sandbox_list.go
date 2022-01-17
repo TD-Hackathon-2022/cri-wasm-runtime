@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"github.com/sirupsen/logrus"
 	v1 "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 )
 
@@ -14,6 +15,7 @@ func (ds *templateService) ListPodSandbox(
 	//logrus.Infof("list sandbox, sandbox count: %d", len(ds.sandboxCache))
 	filterSandboxId := r.GetFilter().GetId()
 	filterSandboxState := r.GetFilter().GetState()
+	logrus.Infof("list sandbox, sbid:{},  ss:{} : %s, %d", filterSandboxId, filterSandboxState.GetState())
 	items := make([]*v1.PodSandbox, 0, len(ds.sandboxCache))
 	for id, cache := range ds.sandboxCache {
 		filterSuccess := filterSandboxId == id && filterSandboxState.GetState() == cache.status.GetState()
