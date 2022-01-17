@@ -112,26 +112,9 @@ func NewTemplateService(
 }
 
 type sandboxCacheModel struct {
-	id         string
-	config     *v1cri.PodSandboxConfig
-	status     *v1cri.PodSandboxStatus
-	images     []string
-	containers []string
-}
-
-func (sc *sandboxCacheModel) stop(ds *templateService) {
-	sc.remove(ds)
-}
-
-func (sc *sandboxCacheModel) remove(ds *templateService) {
-	for _, imageId := range sc.images {
-		delete(ds.imageCache, imageId)
-	}
-	sc.images = make([]string, 10)
-	for _, containerId := range sc.containers {
-		delete(ds.containerCache, containerId)
-	}
-	sc.containers = make([]string, 10)
+	id     string
+	config *v1cri.PodSandboxConfig
+	status *v1cri.PodSandboxStatus
 }
 
 type imageCacheModel struct {
@@ -143,8 +126,9 @@ type imageCacheModel struct {
 }
 
 type containerCacheModel struct {
-	containerId   string
+	id            string
 	config        *v1cri.ContainerConfig
+	status        *v1cri.ContainerStatus
 	sandboxId     string
 	sandboxConfig *v1cri.PodSandboxConfig
 }

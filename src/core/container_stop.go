@@ -2,6 +2,8 @@ package core
 
 import (
 	"context"
+	"fmt"
+	"github.com/sirupsen/logrus"
 	v1 "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 )
 
@@ -10,6 +12,14 @@ func (ds *templateService) StopContainer(
 	_ context.Context,
 	r *v1.StopContainerRequest,
 ) (*v1.StopContainerResponse, error) {
-
+	logrus.Infof("stop container: %s", r.GetContainerId())
+	logrus.Infof("container count : %d", len(ds.containerCache))
+	containerCache := ds.containerCache[r.GetContainerId()]
+	if containerCache == nil {
+		return nil, fmt.Errorf("cannot find container")
+	}
+	containerCache.status.State = v1.ContainerState_CONTAINER_EXITED
+	containerCache.status.FinishedAt = ds.clock.Now().UnixNano()
+	containerCache.status.ExitCode = 0
 	return &v1.StopContainerResponse{}, nil
 }

@@ -13,11 +13,14 @@ import (
 
 // ExecSync executes a command in the container, and returns the stdout output.
 // If command exits with a non-zero exit code, an error is returned.
+const syncExecMaxTimeout = 10
+
 func (ds *templateService) ExecSync(
 	ctx context.Context,
 	req *v1.ExecSyncRequest,
 ) (*v1.ExecSyncResponse, error) {
-	timeout := time.Duration(req.Timeout) * time.Second
+
+	timeout := time.Duration(utils.Min(req.Timeout, syncExecMaxTimeout)) * time.Second
 	var stdoutBuffer, stderrBuffer bytes.Buffer
 	err := ds.streamingRuntime.ExecWithContext(ctx, req.ContainerId, req.Cmd,
 		nil, // in
