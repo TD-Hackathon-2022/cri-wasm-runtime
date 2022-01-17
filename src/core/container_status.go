@@ -13,9 +13,11 @@ func (ds *templateService) ContainerStatus(
 	req *v1.ContainerStatusRequest,
 ) (*v1.ContainerStatusResponse, error) {
 	//something here
-	logrus.Infof("status container: %s, container count : %d", req.GetContainerId(), len(ds.containerCache))
-	defer logrus.Infof("end status container, container: %s", req.GetContainerId())
+	//logrus.Infof("status container: %s, container count : %d", req.GetContainerId(), len(ds.containerCache))
 	containerCache := ds.containerCache[req.GetContainerId()]
+	if containerCache.config.GetMetadata().GetName() == "nginx" {
+		logrus.Infof("status container: %s, container status : %d", req.GetContainerId(), containerCache.status.GetState())
+	}
 	if containerCache == nil {
 		return nil, fmt.Errorf("cannot find container")
 	}
