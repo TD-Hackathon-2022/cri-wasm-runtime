@@ -19,7 +19,5 @@ func (ds *templateService) StopPodSandbox(
 	if sandboxCache == nil {
 		return nil, nil
 	}
-	// todo status after stop
-	sandboxCache.status.State = v1.PodSandboxState_SANDBOX_NOTREADY
 	return &v1.StopPodSandboxResponse{}, nil
 }
