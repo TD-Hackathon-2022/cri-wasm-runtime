@@ -18,5 +18,5 @@ func (ds *templateService) RemovePodSandbox(
 	if sandboxCache != nil {
 		delete(ds.sandboxCache, r.GetPodSandboxId())
 	}
-	return nil, nil
+	return &v1.RemovePodSandboxResponse{}, nil
 }
