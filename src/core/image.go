@@ -16,20 +16,14 @@ func (ds *templateService) ListImages(
 	r *runtimeapi.ListImagesRequest,
 ) (*runtimeapi.ListImagesResponse, error) {
 	// todo something here
-	//logrus.Infof("list image, image count : %d", len(ds.imageCache))
+	imageNameFilter := r.GetFilter().GetImage().GetImage()
+	logrus.Infof("imageNameFilter : %s", imageNameFilter)
 	items := make([]*runtimeapi.Image, 0, len(ds.imageCache))
-	for id, cache := range ds.imageCache {
-		item := &runtimeapi.Image{
-			Id:          id,
-			RepoTags:    cache.imageStatus.GetRepoTags(),
-			RepoDigests: cache.imageStatus.GetRepoDigests(),
-			Size_:       12345,
-			Spec:        cache.image,
-		}
+	for _, cache := range ds.imageCache {
+		item := cache.imageStatus
 		items = append(items, item)
 	}
-
-	defer logrus.Infof("end list image")
+	logrus.Infof("list image, items count : %d", len(items))
 	return &runtimeapi.ListImagesResponse{Images: items}, nil
 }
 
@@ -39,7 +33,7 @@ func (ds *templateService) ImageStatus(
 	r *runtimeapi.ImageStatusRequest,
 ) (*runtimeapi.ImageStatusResponse, error) {
 	logrus.Infof("image status, image: %s, image count : %d", r.GetImage().GetImage(), len(ds.imageCache))
-	defer logrus.Infof("end status image, image: %s", r.GetImage().GetImage())
+	//defer logrus.Infof("end status image, image: %s", r.GetImage().GetImage())
 	imageId := fmt.Sprintf("%x", md5.Sum([]byte(r.GetImage().GetImage())))
 	imageCache := ds.imageCache[imageId]
 	if imageCache == nil {
@@ -54,8 +48,8 @@ func (ds *templateService) PullImage(
 	r *runtimeapi.PullImageRequest,
 ) (*runtimeapi.PullImageResponse, error) {
 	imageSpec := r.GetImage()
-	logrus.Infof("pull image, image: %s, image count : %d", r.GetImage().GetImage(), len(ds.imageCache))
-	defer logrus.Infof("end pull image, image: %s", r.GetImage().GetImage())
+	//logrus.Infof("pull image, image: %s, image count : %d", r.GetImage().GetImage(), len(ds.imageCache))
+	//defer logrus.Infof("end pull image, image: %s", r.GetImage().GetImage())
 
 	imageMockId := fmt.Sprintf("%x", md5.Sum([]byte(imageSpec.GetImage())))
 	imageCache := &imageCacheModel{
@@ -64,9 +58,13 @@ func (ds *templateService) PullImage(
 		image:         imageSpec,
 		sandboxConfig: ds.sandboxCache[r.GetSandboxConfig().GetMetadata().GetUid()].config,
 		imageStatus: &runtimeapi.Image{
-			Id:    imageMockId,
-			Spec:  imageSpec,
-			Size_: 12345,
+			Id:          imageMockId,
+			Spec:        imageSpec,
+			Size_:       12345,
+			RepoTags:    []string{"test"},
+			RepoDigests: []string{"test"},
+			Uid:         &runtimeapi.Int64Value{Value: 12345},
+			Username:    "test",
 		},
 	}
 	ds.imageCache[imageMockId] = imageCache
@@ -78,8 +76,8 @@ func (ds *templateService) RemoveImage(
 	_ context.Context,
 	r *runtimeapi.RemoveImageRequest,
 ) (*runtimeapi.RemoveImageResponse, error) {
-	logrus.Infof("remove image, image: %s, image count : %d", r.GetImage().GetImage(), len(ds.imageCache))
-	defer logrus.Infof("end remove image, image: %s", r.GetImage().GetImage())
+	//logrus.Infof("remove image, image: %s, image count : %d", r.GetImage().GetImage(), len(ds.imageCache))
+	//defer logrus.Infof("end remove image, image: %s", r.GetImage().GetImage())
 	imageId := fmt.Sprintf("%x", md5.Sum([]byte(r.GetImage().GetImage())))
 	delete(ds.imageCache, imageId)
 	return &runtimeapi.RemoveImageResponse{}, nil

@@ -14,9 +14,7 @@ func (ds *templateService) ContainerStatus(
 ) (*v1.ContainerStatusResponse, error) {
 	//something here
 	containerCache := ds.containerCache[req.GetContainerId()]
-	if containerCache.config.GetMetadata().GetName() == "nginx" {
-		logrus.Infof("status container: %s, container status : %d", req.GetContainerId(), containerCache.status.GetState())
-	}
+	logrus.Infof("status container: %s, container status : %d, image: %s", req.GetContainerId(), containerCache.status.GetState(), containerCache.config.GetImage().GetImage())
 	if containerCache == nil {
 		return nil, fmt.Errorf("cannot find container")
 	}

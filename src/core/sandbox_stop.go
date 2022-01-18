@@ -19,5 +19,11 @@ func (ds *templateService) StopPodSandbox(
 	if sandboxCache == nil {
 		return nil, nil
 	}
+	for containerId, _ := range sandboxCache.containerIdMap {
+		ds.containerCache[containerId].status.State = v1.ContainerState_CONTAINER_EXITED
+		ds.containerCache[containerId].status.FinishedAt = ds.clock.Now().UnixNano()
+		ds.containerCache[containerId].status.ExitCode = 0
+		ds.containerCache[containerId].status.Reason = "Completed"
+	}
 	return &v1.StopPodSandboxResponse{}, nil
 }

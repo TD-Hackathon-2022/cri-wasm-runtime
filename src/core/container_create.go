@@ -15,9 +15,9 @@ func (ds *templateService) CreateContainer(
 	r *v1.CreateContainerRequest,
 ) (*v1.CreateContainerResponse, error) {
 	//something here
-	logrus.Infof("create container, container count : %d", len(ds.containerCache))
-	logrus.Infof("create container, image : %s", r.GetConfig().GetImage().GetImage())
-	defer logrus.Infof("end create container")
+	//logrus.Infof("create container, container count : %d", len(ds.containerCache))
+	//logrus.Infof("create container, image : %s", r.GetConfig().GetImage().GetImage())
+	//defer logrus.Infof("end create container")
 	containerId := uuid.New()
 	sandboxId := r.GetPodSandboxId()
 	containerConfig := r.GetConfig()
@@ -32,6 +32,15 @@ func (ds *templateService) CreateContainer(
 		Annotations: r.GetConfig().GetAnnotations(),
 	}
 
+	sanboxCache := ds.sandboxCache[sandboxId]
+	for sContainerId, _ := range sanboxCache.containerIdMap {
+		if ds.containerCache[sContainerId] != nil && ds.containerCache[sContainerId].config.GetImage().GetImage() == r.GetConfig().GetImage().GetImage() {
+			logrus.Infof("repeat create container, sandbox:%s image: %s", sandboxId, r.GetConfig().GetImage().GetImage())
+			return &v1.CreateContainerResponse{
+				ContainerId: sContainerId,
+			}, nil
+		}
+	}
 	containerCache := &containerCacheModel{
 		id:            containerId,
 		config:        containerConfig,
@@ -41,6 +50,7 @@ func (ds *templateService) CreateContainer(
 	}
 
 	ds.containerCache[containerId] = containerCache
+	ds.sandboxCache[sandboxId].containerIdMap[containerId] = containerId
 
 	return &v1.CreateContainerResponse{
 		ContainerId: containerId,

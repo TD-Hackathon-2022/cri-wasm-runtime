@@ -13,10 +13,13 @@ func (ds *templateService) RemovePodSandbox(
 	r *v1.RemovePodSandboxRequest,
 ) (*v1.RemovePodSandboxResponse, error) {
 	logrus.Infof("remove sandbox, sandboxId: %s, sandbox count: %d", r.GetPodSandboxId(), len(ds.sandboxCache))
-	defer logrus.Infof("end remove sandbox, sandboxId: %s", r.GetPodSandboxId())
+	//defer logrus.Infof("end remove sandbox, sandboxId: %s", r.GetPodSandboxId())
 	sandboxCache := ds.sandboxCache[r.GetPodSandboxId()]
 	if sandboxCache != nil {
 		delete(ds.sandboxCache, r.GetPodSandboxId())
+		for containerId, _ := range sandboxCache.containerIdMap {
+			delete(ds.containerCache, containerId)
+		}
 	}
 	return &v1.RemovePodSandboxResponse{}, nil
 }

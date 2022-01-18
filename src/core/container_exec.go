@@ -18,7 +18,7 @@ func (ds *templateService) ExecSync(
 	ctx context.Context,
 	req *v1.ExecSyncRequest,
 ) (*v1.ExecSyncResponse, error) {
-	logrus.Infof("exec container, container: %s, container count : %d", req.GetContainerId(), len(ds.containerCache))
+	//logrus.Infof("exec container, container: %s, container count : %d", req.GetContainerId(), len(ds.containerCache))
 	timeout := time.Duration(utils.Min(req.Timeout, syncExecMaxTimeout)) * time.Second
 	logrus.Info(timeout)
 

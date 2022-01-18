@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"fmt"
 	v1 "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 )
 
@@ -13,6 +14,9 @@ func (ds *templateService) RunPodSandbox(
 ) (*v1.RunPodSandboxResponse, error) {
 	//logrus.Infof("run sandbox, sandboxId: %s, sandbox count: %d", r.GetConfig().GetMetadata().GetUid(), len(ds.sandboxCache))
 	//defer logrus.Infof("end run sandbox, sandboxId: %s", r.GetConfig().GetMetadata().GetUid())
+	if r.GetConfig().GetLabels()["cri-runtime"] != "wasm" {
+		return nil, fmt.Errorf("not wasm sandbox")
+	}
 	resp := &v1.RunPodSandboxResponse{PodSandboxId: r.GetConfig().GetMetadata().GetUid()}
 	status := &v1.PodSandboxStatus{
 		Id:        resp.GetPodSandboxId(),
@@ -33,9 +37,10 @@ func (ds *templateService) RunPodSandbox(
 		RuntimeHandler: r.RuntimeHandler,
 	}
 	ds.sandboxCache[resp.PodSandboxId] = &sandboxCacheModel{
-		id:     resp.GetPodSandboxId(),
-		config: r.GetConfig(),
-		status: status,
+		id:             resp.GetPodSandboxId(),
+		config:         r.GetConfig(),
+		status:         status,
+		containerIdMap: make(map[string]string),
 	}
 	return resp, nil
 }

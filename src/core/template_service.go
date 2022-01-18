@@ -112,9 +112,10 @@ func NewTemplateService(
 }
 
 type sandboxCacheModel struct {
-	id     string
-	config *v1cri.PodSandboxConfig
-	status *v1cri.PodSandboxStatus
+	id             string
+	config         *v1cri.PodSandboxConfig
+	status         *v1cri.PodSandboxStatus
+	containerIdMap map[string]string
 }
 
 type imageCacheModel struct {

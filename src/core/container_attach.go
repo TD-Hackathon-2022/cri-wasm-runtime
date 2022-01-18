@@ -13,7 +13,7 @@ func (ds *templateService) Attach(
 	req *v1.AttachRequest,
 ) (*v1.AttachResponse, error) {
 	logrus.Infof("attach container, container: %s, container count : %d", req.GetContainerId(), len(ds.containerCache))
-	defer logrus.Infof("end attach container")
+	//defer logrus.Infof("end attach container")
 	if ds.streamingServer == nil {
 		return nil, streaming.NewErrorStreamingDisabled("attach")
 	}

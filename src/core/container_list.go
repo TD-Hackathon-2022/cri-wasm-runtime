@@ -2,7 +2,6 @@ package core
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
 	v1 "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 )
 
@@ -27,9 +26,11 @@ func (ds *templateService) ListContainers(
 		}
 		filterSuccess = filterContainerState.GetState() == containerCache.status.GetState()
 		if filterSuccess {
-			if ds.imageCache[containerCache.config.GetImage().GetImage()].name == "nginx" {
-				logrus.Infof("nginx c status: %d", containerCache.status.GetState())
-			}
+			//if ds.imageCache[containerCache.config.GetImage().GetImage()].name == "nginx:latest" {
+			//	logrus.Infof("nginx c status: %d", containerCache.status.GetState())
+			//}
+			//logrus.Infof("image: %s",ds.imageCache[containerCache.config.GetImage().GetImage()].name)
+			//logrus.Infof("list container: %s, container status : %d, image: %s", containerId, containerCache.status.GetState(), containerCache.config.GetImage().GetImage())
 			item := &v1.Container{
 				Id:           containerId,
 				PodSandboxId: containerCache.sandboxId,
