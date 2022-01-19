@@ -34,6 +34,7 @@ type StreamingRuntime struct {
 type ExecHandler interface {
 	ExecInContainer(
 		ctx context.Context,
+		containerID string,
 		cmd []string,
 		stdin io.Reader,
 		stdout, stderr io.WriteCloser,
@@ -70,6 +71,7 @@ func (r *StreamingRuntime) ExecWithContext(
 
 	return r.ExecHandler.ExecInContainer(
 		ctx,
+		containerID,
 		cmd,
 		in,
 		out,

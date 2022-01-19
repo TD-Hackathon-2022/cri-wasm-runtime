@@ -20,17 +20,21 @@ func (ds *templateService) ListPodSandbox(
 		if len(filterSandboxId) != 0 {
 			filterSuccess = filterSandboxId == id
 		}
-		filterSuccess = filterSandboxState.GetState() == cache.status.GetState()
-		if filterSuccess {
-			item := &v1.PodSandbox{
-				Id:             id,
-				Metadata:       cache.config.Metadata,
-				State:          cache.status.State,
-				CreatedAt:      cache.status.CreatedAt,
-				Labels:         cache.config.Labels,
-				Annotations:    cache.config.Annotations,
-				RuntimeHandler: cache.status.GetRuntimeHandler(),
+		item := &v1.PodSandbox{
+			Id:             id,
+			Metadata:       cache.config.Metadata,
+			State:          cache.status.State,
+			CreatedAt:      cache.status.CreatedAt,
+			Labels:         cache.config.Labels,
+			Annotations:    cache.config.Annotations,
+			RuntimeHandler: cache.status.GetRuntimeHandler(),
+		}
+		if filterSandboxState != nil {
+			filterSuccess = filterSandboxState.GetState() == cache.status.GetState()
+			if filterSuccess {
+				items = append(items, item)
 			}
+		} else {
 			items = append(items, item)
 		}
 	}

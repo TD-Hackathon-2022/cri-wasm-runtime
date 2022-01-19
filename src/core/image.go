@@ -56,7 +56,7 @@ func (ds *templateService) PullImage(
 		id:            imageMockId,
 		name:          imageSpec.GetImage(),
 		image:         imageSpec,
-		sandboxConfig: ds.sandboxCache[r.GetSandboxConfig().GetMetadata().GetUid()].config,
+		sandboxConfig: nil,
 		imageStatus: &runtimeapi.Image{
 			Id:          imageMockId,
 			Spec:        imageSpec,

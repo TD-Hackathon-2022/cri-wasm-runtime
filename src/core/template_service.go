@@ -87,14 +87,17 @@ func NewTemplateService(
 
 	ds := &templateService{
 		os: config.RealOS{},
-		streamingRuntime: &streaming.StreamingRuntime{
-			ExecHandler: &NativeExecHandler{},
-		},
 
 		clock:          clock.RealClock{},
 		sandboxCache:   make(map[string]*sandboxCacheModel),
 		imageCache:     make(map[string]*imageCacheModel),
 		containerCache: make(map[string]*containerCacheModel),
+	}
+
+	ds.streamingRuntime = &streaming.StreamingRuntime{
+		ExecHandler: &NativeExecHandler{
+			templateService: ds,
+		},
 	}
 
 	// create streaming backend if configured.

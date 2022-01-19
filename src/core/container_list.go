@@ -24,26 +24,27 @@ func (ds *templateService) ListContainers(
 		if len(filterContainerId) != 0 {
 			filterSuccess = filterContainerId == containerId
 		}
-		filterSuccess = filterContainerState.GetState() == containerCache.status.GetState()
-		if filterSuccess {
-			//if ds.imageCache[containerCache.config.GetImage().GetImage()].name == "nginx:latest" {
-			//	logrus.Infof("nginx c status: %d", containerCache.status.GetState())
-			//}
-			//logrus.Infof("image: %s",ds.imageCache[containerCache.config.GetImage().GetImage()].name)
-			//logrus.Infof("list container: %s, container status : %d, image: %s", containerId, containerCache.status.GetState(), containerCache.config.GetImage().GetImage())
-			item := &v1.Container{
-				Id:           containerId,
-				PodSandboxId: containerCache.sandboxId,
-				Metadata:     containerCache.config.Metadata,
-				Image:        ds.imageCache[containerCache.config.GetImage().GetImage()].image,
-				ImageRef:     containerCache.config.GetImage().GetImage(),
-				State:        containerCache.status.State,
-				CreatedAt:    containerCache.status.CreatedAt,
-				Labels:       containerCache.config.GetLabels(),
-				Annotations:  containerCache.config.GetAnnotations(),
+		item := &v1.Container{
+			Id:           containerId,
+			PodSandboxId: containerCache.sandboxId,
+			Metadata:     containerCache.config.Metadata,
+			Image:        ds.imageCache[containerCache.config.GetImage().GetImage()].image,
+			ImageRef:     containerCache.config.GetImage().GetImage(),
+			State:        containerCache.status.State,
+			CreatedAt:    containerCache.status.CreatedAt,
+			Labels:       containerCache.config.GetLabels(),
+			Annotations:  containerCache.config.GetAnnotations(),
+		}
+		if filterContainerState != nil {
+			filterSuccess = filterContainerState.GetState() == containerCache.status.GetState()
+			if filterSuccess {
+				//logrus.Infof("list container: %s, container status : %d, image: %s", containerId, containerCache.status.GetState(), containerCache.config.GetImage().GetImage())
+				items = append(items, item)
 			}
+		} else {
 			items = append(items, item)
 		}
+
 	}
 	//logrus.Infof("list container, sbid:{}, cid:{}, cs:{} : %s, %s ,%d, end list container, itemSize: %d", filterSandboxId, filterContainerId, filterContainerState.GetState(), len(items))
 	return &v1.ListContainersResponse{Containers: items}, nil
