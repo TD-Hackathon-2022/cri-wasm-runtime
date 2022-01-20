@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	v1 "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 )
 
@@ -14,7 +13,7 @@ func (ds *templateService) ContainerStatus(
 ) (*v1.ContainerStatusResponse, error) {
 	//something here
 	containerCache := ds.containerCache[req.GetContainerId()]
-	logrus.Infof("status container: %s, container status : %d, image: %s", req.GetContainerId(), containerCache.status.GetState(), containerCache.config.GetImage().GetImage())
+	//logrus.Infof("status container: %s, container status : %d, image: %s", req.GetContainerId(), containerCache.status.GetState(), containerCache.config.GetImage().GetImage())
 	if containerCache == nil {
 		return nil, fmt.Errorf("cannot find container")
 	}

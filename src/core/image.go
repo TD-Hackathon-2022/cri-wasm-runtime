@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	runtimeapi "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 )
 
@@ -16,14 +15,14 @@ func (ds *templateService) ListImages(
 	r *runtimeapi.ListImagesRequest,
 ) (*runtimeapi.ListImagesResponse, error) {
 	// todo something here
-	imageNameFilter := r.GetFilter().GetImage().GetImage()
-	logrus.Infof("imageNameFilter : %s", imageNameFilter)
+	//imageNameFilter := r.GetFilter().GetImage().GetImage()
+	//logrus.Infof("imageNameFilter : %s", imageNameFilter)
 	items := make([]*runtimeapi.Image, 0, len(ds.imageCache))
 	for _, cache := range ds.imageCache {
 		item := cache.imageStatus
 		items = append(items, item)
 	}
-	logrus.Infof("list image, items count : %d", len(items))
+	//logrus.Infof("list image, items count : %d", len(items))
 	return &runtimeapi.ListImagesResponse{Images: items}, nil
 }
 
@@ -32,7 +31,7 @@ func (ds *templateService) ImageStatus(
 	_ context.Context,
 	r *runtimeapi.ImageStatusRequest,
 ) (*runtimeapi.ImageStatusResponse, error) {
-	logrus.Infof("image status, image: %s, image count : %d", r.GetImage().GetImage(), len(ds.imageCache))
+	//logrus.Infof("image status, image: %s, image count : %d", r.GetImage().GetImage(), len(ds.imageCache))
 	//defer logrus.Infof("end status image, image: %s", r.GetImage().GetImage())
 	imageId := fmt.Sprintf("%x", md5.Sum([]byte(r.GetImage().GetImage())))
 	imageCache := ds.imageCache[imageId]

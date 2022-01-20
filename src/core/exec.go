@@ -64,10 +64,10 @@ func (ne *NativeExecHandler) ExecInContainer(
 	// imageName -> wasm file path
 
 	commandStr := fmt.Sprintf("wasmtime run --dir %s %s %s %s", wasmOpenDir, wasmFilePath, args, outputFilePath)
-	command := exec.Command("/bin/bash", "-c", commandStr)
+	command := exec.Command("/usr/bin/bash", "-c", commandStr)
 	output, execErr := command.CombinedOutput()
 	if execErr != nil {
-		fmt.Println("run error, error: ", string(output))
+		logrus.Infof("run error, commandStr:%s ,errorInfo: %s, error : %v", commandStr, string(output), execErr)
 		stderr.Write(output)
 	} else {
 		resultBytes, readResultErr := ioutil.ReadFile(outputFilePath)
