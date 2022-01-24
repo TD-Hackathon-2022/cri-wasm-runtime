@@ -30,6 +30,7 @@ func (ds *templateService) CreateContainer(
 		ImageRef:    r.GetConfig().GetImage().GetImage(),
 		Labels:      r.GetConfig().GetLabels(),
 		Annotations: r.GetConfig().GetAnnotations(),
+		LogPath: r.GetConfig().GetLogPath(),
 	}
 
 	sanboxCache := ds.sandboxCache[sandboxId]
